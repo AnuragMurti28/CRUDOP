@@ -1,6 +1,10 @@
 <!-- INSERT INTO `notes` (`sno`, `title`, `description`, `tstamp`) VALUES (NULL, 'Buy books', 'RD Sharma\r\nEMFT\r\nDelete after task done', current_timestamp()); -->
 
+<!-- --------------------PHP Code ---------------------------------- -->
 <?php
+$insert = False;
+$update = False;
+$delete = False;
 // Connection to Database
 $servername =  "localhost";
 $username = "root";
@@ -14,19 +18,36 @@ $conn = mysqli_connect($servername, $username, $password, $database);
 if (!$conn) {
     die("Sorry we fail to connect: " . mysqli_connect_error());
 }
+if ($_SERVER['REQUEST_METHOD']=='POST') {
+    $ititle = $_POST['new_title'];
+    $idescription = $_POST['new_description'];
 
+    // SQL query to be executed
+    $sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$ititle', '$idescription')";
+    $result = mysqli_query($conn,$sql);
+    
+    // connection success and error message
+    if($result){
+        // echo "The record has been inserted successfully<br>";
+        $insert = true;
+    }
+    else{
+        echo " unable to insert due to error: " .mysqli_error($conn); 
+    }
+}
 ?>
+<!-- --------------------PHP Code ---------------------------------- -->
 <!doctype html>
 <html lang="en">
-
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
+    
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-
+    
     <title>iNotes - notes taking easy</title>
 </head>
 
@@ -48,24 +69,7 @@ if (!$conn) {
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact us</a>
                     </li>
-                    <!-- Extra Navigation tabs -->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Portfolio
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Logos</a></li>
-                            <li><a class="dropdown-item" href="#">Landing Pages</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
-                    </li> -->
-                    <!-- Extra Navigation tabs -->
+
                 </ul>
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -74,32 +78,35 @@ if (!$conn) {
             </div>
         </div>
     </nav>
+
+    <!-- =====================Alert===================== -->
+    <?php
+    if($insert){
+        echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+        <strong>Success</strong> Your record has been inserted successfully.
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+      </div>";
+    }
+    ?>
+    <!-- =====================Alert===================== -->
     <div class="container my-4">
         <h2>Add a Note</h2>
-        <form>
+        <form action="/crudop/index.php" method="POST">
             <div class="mb-3">
                 <label for="title" class="form-label">Note Title</label>
-                <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                <input type="text" class="form-control" id="title" name="new_title" aria-describedby="emailHelp">
+                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
             </div>
 
             <div class="mb-3">
                 <label for="desc" class="form-label">Note Description</label>
-                <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+                <textarea class="form-control" id="description" name="new_description" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Add note</button>
         </form>
     </div>
     <div class="container">
-        <?php
-        $sql = "SELECT * FROM `notes`";
-        $result = mysqli_query($conn, $sql);
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo $row['sno'], ". Title ", $row['title'], " desc is ", $row['description'];
-            echo "<br>";
-        }
-        ?>
-
+    
         <table class="table">
             <thead>
                 <tr>
@@ -123,12 +130,7 @@ if (!$conn) {
 
                 }
                  ?>
-                <!-- <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr> -->
+               
 
             </tbody>
         </table>
