@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
     <?php
     if($insert){
         echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-        <strong>Success</strong> Your record has been inserted successfully.
+        <strong>Success</strong> Your note has been inserted successfully.
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
       </div>";
     }
