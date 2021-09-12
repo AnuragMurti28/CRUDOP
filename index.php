@@ -1,21 +1,21 @@
-<?
-    // Connection to Database
-    $servername =  "localhost";
-    $username = "root";
-    $password = "";
-    $database = "notes";
+<!-- INSERT INTO `notes` (`sno`, `title`, `description`, `tstamp`) VALUES (NULL, 'Buy books', 'RD Sharma\r\nEMFT\r\nDelete after task done', current_timestamp()); -->
 
-    // Create a connection
-    $conn = mysqli_connect($servername, $username, $password, $database);
+<?php
+// Connection to Database
+$servername =  "localhost";
+$username = "root";
+$password = "";
+$database = "notes";
 
-    // Check connection
-    if (!$conn) {
+// Create a connection
+$conn = mysqli_connect($servername, $username, $password, $database);
+
+// Check connection
+if (!$conn) {
     die("Sorry we fail to connect: " . mysqli_connect_error());
-  }
-  else{
-    echo "Connected successfully";
-  }
-  ?>
+}
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -35,8 +35,8 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="#">iNotes</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -92,9 +92,46 @@
     </div>
     <div class="container">
         <?php
-         $sql = "SELECT * FROM `notes`";
-         $result = mysqli_query($conn,$sql);
+        $sql = "SELECT * FROM `notes`";
+        $result = mysqli_query($conn, $sql);
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo $row['sno'], ". Title ", $row['title'], " desc is ", $row['description'];
+            echo "<br>";
+        }
         ?>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Sno</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $sql = "SELECT * FROM `notes`";
+                $result = mysqli_query($conn, $sql);
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>
+                    <th scope='row'> ".$row['sno']." </th>
+                    <td> ".$row['title']." </td>
+                    <td> ".$row['description']." </td>
+                    <td> Actions </td>
+                    </tr>";
+
+                }
+                 ?>
+                <!-- <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr> -->
+
+            </tbody>
+        </table>
     </div>
     <!-- Optional JavaScript; choose one of the two! -->
 
