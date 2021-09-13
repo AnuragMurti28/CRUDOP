@@ -18,36 +18,47 @@ $conn = mysqli_connect($servername, $username, $password, $database);
 if (!$conn) {
     die("Sorry we fail to connect: " . mysqli_connect_error());
 }
-if ($_SERVER['REQUEST_METHOD']=='POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ititle = $_POST['new_title'];
     $idescription = $_POST['new_description'];
 
     // SQL query to be executed
     $sql = "INSERT INTO `notes` (`title`, `description`) VALUES ('$ititle', '$idescription')";
-    $result = mysqli_query($conn,$sql);
-    
+    $result = mysqli_query($conn, $sql);
+
     // connection success and error message
-    if($result){
+    if ($result) {
         // echo "The record has been inserted successfully<br>";
         $insert = true;
-    }
-    else{
-        echo " unable to insert due to error: " .mysqli_error($conn); 
+    } else {
+        echo " unable to insert due to error: " . mysqli_error($conn);
     }
 }
 ?>
 <!-- --------------------PHP Code ---------------------------------- -->
 <!doctype html>
 <html lang="en">
-    
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    
+
+    <!-- Links from datatable.com -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css">
+
+    <script src="//cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
+
+    <!-- Links from datatable.com -->
+
     <title>iNotes - notes taking easy</title>
 </head>
 
@@ -81,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
 
     <!-- =====================Alert===================== -->
     <?php
-    if($insert){
+    if ($insert) {
         echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
         <strong>Success</strong> Your note has been inserted successfully.
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
@@ -106,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
         </form>
     </div>
     <div class="container">
-    
+
         <table class="table">
             <thead>
                 <tr>
@@ -122,15 +133,14 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
                 $result = mysqli_query($conn, $sql);
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>
-                    <th scope='row'> ".$row['sno']." </th>
-                    <td> ".$row['title']." </td>
-                    <td> ".$row['description']." </td>
+                    <th scope='row'> " . $row['sno'] . " </th>
+                    <td> " . $row['title'] . " </td>
+                    <td> " . $row['description'] . " </td>
                     <td> Actions </td>
                     </tr>";
-
                 }
-                 ?>
-               
+                ?>
+
 
             </tbody>
         </table>
