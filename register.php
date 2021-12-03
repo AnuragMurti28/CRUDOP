@@ -23,6 +23,9 @@ if($_SERVER['REQUEST_METHOD']== POST ){
                 if(mysqli_stmt_num_rows($stmt) == 1){
                     $username_err = "This user name already taken";
                 }
+                else{
+                    $username = trim($_POST['username']);   
+                }
             }
         }
     }
