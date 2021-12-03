@@ -1,3 +1,34 @@
+<?php
+require_once "config.php";
+$username = $password = $confirm_password = "";
+$username_err = $password_err = $confirm_password_err = "";
+
+if($_SERVER['REQUEST_METHOD']== POST ){
+    //check if username empty
+    if(empty(trim($_POST["username"]))){
+        $username_err="username cannot be blank";
+    }
+    else{
+        $sql = "SELECT id FROM users WHERE username = ?";
+        $stmt = mysqli_prepare($link,$sql);
+        if($stmt){
+            mysqli_stmt_bind_param($stmt,"s", $param_username);
+
+            //set value for param username
+            $param_username = trim($_POST['username']);
+
+            // try to execute this statement
+            if(mysqli_stmt_execute($stmt)){
+                mysqli_stmt_store_result($stmt);
+                if(mysqli_stmt_num_rows($stmt) == 1){
+                    $username_err = "This user name already taken";
+                }
+            }
+        }
+    }
+}
+
+?>
 <!doctype html>
 <html lang="en">
   <head>
