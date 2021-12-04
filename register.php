@@ -3,14 +3,14 @@ require_once "config.php";
 $username = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";
 
-if($_SERVER['REQUEST_METHOD']== POST ){
+if($_SERVER['REQUEST_METHOD']== "POST" ){
     //check if username empty
     if(empty(trim($_POST["username"]))){
         $username_err="username cannot be blank";
     }
     else{
         $sql = "SELECT id FROM users WHERE username = ?";
-        $stmt = mysqli_prepare($link,$sql);
+        $stmt = mysqli_prepare($conn,$sql);
         if($stmt){
             mysqli_stmt_bind_param($stmt,"s", $param_username);
 
@@ -45,8 +45,39 @@ if($_SERVER['REQUEST_METHOD']== POST ){
     else{
       trim($_POST['password']);
     }
+
+
+//check for confirm password field
+if (trim($_POST['password']) != trim($_POST['confirm_password'])){
+  $password_err = "Password should match";
 }
 
+// if there were no errors then go ahead and insert into database
+if (empty($username_err) && empty($password_err) && empty($confirm_password_err))
+{
+  $sql = "INSERT INTO users (username, password) VALUES (?,?) ";
+  $stmt = mysqli_prepare($conn,$sql);
+  if($stmt)
+  {
+    mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+
+    //set these parameters
+    $param_username = $username;
+    $param_password = password_hash($password,PASSWORD_DEFAULT);
+
+    //try to execute query
+    if(mysqli_stmt_execute($stmt))
+    {
+      header("location: login.php");
+    }
+    else{
+      echo "something went wrong. Cannot redirect";
+    }
+  }
+  mysqli_stmt_close($stmt);
+}
+mysqli_close($conn);
+} 
 ?>
 <!doctype html>
 <html lang="en">
