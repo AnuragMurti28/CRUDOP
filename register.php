@@ -27,7 +27,23 @@ if($_SERVER['REQUEST_METHOD']== POST ){
                     $username = trim($_POST['username']);   
                 }
             }
+            else{
+              echo "something went wrong";
+            }
         }
+    }
+
+    mysqli_stmt_close($stmt);
+
+    //check for password
+    if (empty(trim($_POST['password']))){
+      $password_err = "Password cannot be blank";
+    }
+    elseif(strlen(trim($_POST['password'])<5)){
+      $password_err = "Password cannot be less than 5 characters";
+    }
+    else{
+      trim($_POST['password']);
     }
 }
 
